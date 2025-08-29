@@ -29,7 +29,12 @@
             <version>25.05.20-1</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Add more dependencies as needed -->
     </dependencies>
