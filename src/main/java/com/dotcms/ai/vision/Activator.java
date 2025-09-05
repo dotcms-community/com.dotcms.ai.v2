@@ -6,10 +6,14 @@ import com.dotcms.ai.vision.workflow.OpenAIVisionAutoTagActionlet;
 import com.dotmarketing.business.APILocator;
 import com.dotmarketing.osgi.GenericBundleActivator;
 import com.dotmarketing.portlets.workflows.actionlet.WorkFlowActionlet;
+import com.dotmarketing.portlets.workflows.business.WorkflowAPI;
+import com.dotmarketing.portlets.workflows.business.WorkflowAPIOsgiService;
+import com.dotmarketing.util.Logger;
 import io.vavr.Lazy;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 public class Activator extends GenericBundleActivator {
 
@@ -34,12 +38,19 @@ public class Activator extends GenericBundleActivator {
 
     public void start(BundleContext context) throws Exception {
 
+       this.forceWorkflowServiceLoading(context);
+
+       // Add the Image Tagging listener
+       subscribeEmbeddingsListener();
+
         // Register Embedding Actionlet
-        actionlets.forEach(a -> this.registerActionlet(context, a));
+       for( WorkFlowActionlet a : actionlets){
+            Logger.info(this.getClass().getName(), " In activator: Registering Actionlet: " + a.getName());
+          this.registerActionlet(context, a);
+       }
 
-        // Add the Embedding Listener (this does nothing right now)
-        subscribeEmbeddingsListener();
 
+        System.out.println("REALLY Starting OpenAI Vision Auto Tagging Actionlet");
 
 
     }
@@ -63,6 +74,28 @@ public class Activator extends GenericBundleActivator {
         APILocator.getLocalSystemEventsAPI().subscribe(LISTENER);
 
     }
+
+
+
+   private void forceWorkflowServiceLoading ( BundleContext context ) {
+
+      //Getting the service to register our Actionlet
+      ServiceReference<?> serviceRefSelected = context.getServiceReference( WorkflowAPIOsgiService.class.getName() );
+      if ( serviceRefSelected == null ) {
+
+         //Forcing the loading of the WorkflowService
+         WorkflowAPI workflowAPI = APILocator.getWorkflowAPI();
+         if ( workflowAPI != null ) {
+
+            serviceRefSelected = context.getServiceReference( WorkflowAPIOsgiService.class.getName() );
+            if ( serviceRefSelected == null ) {
+               //Forcing the registration of our required services
+               workflowAPI.registerBundleService();
+            }
+         }
+      }
+   }
+
 
 
 }
