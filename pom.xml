@@ -5,7 +5,7 @@
 
     <groupId>com.dotcms.ai</groupId>
     <artifactId>vision</artifactId> <!-- Update artifactId to match your AOP project -->
-    <version>0.4.1</version>
+    <version>2025.05.20</version>
     <packaging>bundle</packaging>
 
     <properties>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.dotcms</groupId>
             <artifactId>dotcms-core</artifactId>
-            <version>24.09.25</version>
+            <version>25.05.20-1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -35,12 +35,7 @@
             <version>${aspectj.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
+
         <!-- Add more dependencies as needed -->
     </dependencies>
 
@@ -49,8 +44,8 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <version>5.1.9</version>
                 <extensions>true</extensions>
-
                 <configuration>
                     <instructions>
                         <Bundle-Vendor>dotCMS</Bundle-Vendor>
